@@ -3,17 +3,23 @@ package ddym_corp.quoridor.ranking.domain.service;
 import ddym_corp.quoridor.ranking.RankingUser;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class RedisRankingService implements RankingService {
     private final String key = "ranking";
 
@@ -56,9 +62,7 @@ public class RedisRankingService implements RankingService {
         if(above == null) {
             return below;
         }
-
-        above.addAll(below);
-        return above;
+        return Stream.of(above, below).flatMap(Collection::stream).collect(Collectors.toList());
     }
 
     @Override
@@ -69,6 +73,7 @@ public class RedisRankingService implements RankingService {
 
         Set<ZSetOperations.TypedTuple<Long>> typedTuples = zSetOperations.reverseRangeWithScores(key, idx, idx + 10);
         List<RankingUser> below = typedTuples.stream().map(RankingUser::convertToRankingUser).toList();
+        log.info("below list : {} empty?{}", below.getClass(), below.isEmpty());
 
         return below;
     }
@@ -79,10 +84,11 @@ public class RedisRankingService implements RankingService {
         Long idx = findIndex(uid);
         ZSetOperations<String, Long> zSetOperations = redisTemplate.opsForZSet();
 
-        List<RankingUser> above = null;
-        if(idx - 1 > 0) {
+        List<RankingUser> above = new ArrayList<>();
+        if(idx - 1 > -1) {
             Set<ZSetOperations.TypedTuple<Long>> typedTuples = zSetOperations.reverseRangeWithScores(key, idx - 10, idx - 1);
             above = typedTuples.stream().map(RankingUser::convertToRankingUser).toList();
+            log.info("above list : {} empty?{}", above.getClass(), above.isEmpty());
         }
         return above;
     }
@@ -91,5 +97,6 @@ public class RedisRankingService implements RankingService {
     void init() {
         join(1L);
         join(2L);
+        join(3L);
     }
 }

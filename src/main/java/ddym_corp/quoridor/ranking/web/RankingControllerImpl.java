@@ -37,7 +37,7 @@ public class RankingControllerImpl implements RankingController {
 
     @Override
     @GetMapping(value = "/ranking/over")
-    public RankingResponse getRankingOverThis(@RequestParam Long uid, HttpServletRequest request) {
+    public RankingResponse getRankingOverThis(@RequestParam("uid") Long uid, HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         session.setMaxInactiveInterval(1800);
 

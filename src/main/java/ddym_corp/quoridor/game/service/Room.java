@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import ddym_corp.quoridor.auth.web.SessionConst;
 import ddym_corp.quoridor.game.web.MoveMessage;
 import ddym_corp.quoridor.history.sevice.HistoryService;
+import ddym_corp.quoridor.ranking.domain.service.RankingService;
 import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.UserRepository;
 import lombok.Getter;
@@ -28,6 +29,7 @@ public class Room {
 
     private final UserRepository userRepository;
     private final HistoryService historyService;
+    private final RankingService rankingService;
 
     private Set<WebSocketSession> sessions = new HashSet<>(2);
     private Long[] uIDs;
@@ -134,12 +136,16 @@ public class Room {
     private void calcDeltaScore(Long winnerUID, Long loserUID) {
         User winner = userRepository.findByuID(winnerUID).get();
         User loser = userRepository.findByuID(loserUID).get();
-        int winnerScore = Elo.calcRating(winner.getScore(), loser.getScore(), WIN);
-        int loserScore = Elo.calcRating(loser.getScore(), winner.getScore(), LOSE);
+        Integer winPreScore = winner.getScore();
+        Integer losePreScore = loser.getScore();
+        int winnerScore = Elo.calcRating(winPreScore, losePreScore, WIN);
+        int loserScore = Elo.calcRating(losePreScore, winPreScore, LOSE);
         winner.setScore(winnerScore); winner.setTotalGames(winner.getTotalGames() + 1); winner.setWinGames(winner.getWinGames() + 1);
         loser.setScore(loserScore); loser.setTotalGames(loser.getTotalGames() + 1);
         userRepository.update(winner);
         userRepository.update(loser);
+        rankingService.update(winnerUID, winPreScore, winnerScore);
+        rankingService.update(loserUID, losePreScore, loserScore);
 
         sendScore(winnerUID,loserUID,winnerScore,loserScore, winner.getTotalGames(),loser.getTotalGames(),winner.getWinGames(),loser.getWinGames());
 
