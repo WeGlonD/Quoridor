@@ -5,7 +5,7 @@ import ddym_corp.quoridor.game.service.Room;
 import ddym_corp.quoridor.game.service.RoomManager;
 import ddym_corp.quoridor.history.History;
 import ddym_corp.quoridor.history.sevice.HistoryService;
-import ddym_corp.quoridor.match.repository.WaitingUser;
+import ddym_corp.quoridor.match.WaitingUser;
 import ddym_corp.quoridor.match.repository.MatchRepository;
 import ddym_corp.quoridor.match.utils.MatchResponseDto;
 import ddym_corp.quoridor.user.User;
@@ -31,7 +31,7 @@ public class MatchServiceImpl implements MatchService {
     private final LoginServiceImpl loginService;
 
     @Override
-    public MatchResponseDto selectPartner(Long uid, int gameType) {
+    public MatchResponseDto findOpponent(Long uid, int gameType) {
         Optional<WaitingUser> user = matchRepository.findByuID(uid);
         if(user.isPresent()){
             Long gameID = user.get().getGameID();//널: 매칭안됨, 아니면: 매칭됨

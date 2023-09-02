@@ -40,6 +40,11 @@ public class JpaUserRepository implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByEmail(String email) {
+        return Optional.empty();
+    }
+
+    @Override
     public void clearAll() {
 
     }

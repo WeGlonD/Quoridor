@@ -1,5 +1,6 @@
 package ddym_corp.quoridor.match.repository;
 
+import ddym_corp.quoridor.match.WaitingUser;
 import org.springframework.stereotype.Repository;
 
 import java.util.Map;

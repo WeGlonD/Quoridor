@@ -1,4 +1,4 @@
-package ddym_corp.quoridor.auth;
+package ddym_corp.quoridor.oAuth2;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

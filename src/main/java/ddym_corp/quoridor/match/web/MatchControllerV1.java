@@ -39,7 +39,7 @@ public class MatchControllerV1 implements MatchController {
 
         int gameType = matchDto.getGameType();
 
-        MatchResponseDto matchResponseDto = matchService.selectPartner(uid, gameType);
+        MatchResponseDto matchResponseDto = matchService.findOpponent(uid, gameType);
         if (matchResponseDto.getGameId() == null){
             log.info("UID:{} GameType:{} 매칭중", uid, matchDto.getGameType());
             return matchResponseDto;
