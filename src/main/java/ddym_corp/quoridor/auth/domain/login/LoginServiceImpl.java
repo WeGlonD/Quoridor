@@ -1,6 +1,8 @@
 package ddym_corp.quoridor.auth.domain.login;
 
 import ddym_corp.quoridor.auth.web.UserUpdateDto;
+import ddym_corp.quoridor.ranking.domain.repository.RankingRepository;
+import ddym_corp.quoridor.ranking.domain.service.RankingService;
 import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,6 +14,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class LoginServiceImpl {
     private final UserRepository userRepository;
+    private final RankingService rankingService;
 
     public User login(String loginId, String password) {
         return userRepository.findByLoginId(loginId)
@@ -23,6 +26,7 @@ public class LoginServiceImpl {
         // 같은 이름이 있는 중복 희원X
         validateDuplicateMember(user);
         userRepository.save(user);
+        rankingService.join(user.getUid());
         return user.getUid();
     }
 
