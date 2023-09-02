@@ -24,4 +24,8 @@ public class User {
         this.loginId = id;
         this.password = pw;
     }
+
+    public User(String email) {
+        this.email = email;
+    }
 }

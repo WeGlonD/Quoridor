@@ -55,9 +55,16 @@ public class MemoryUserRepository implements UserRepository{
                 .findFirst();
     }
 
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return findAll().stream()
+                .filter(user -> user.getEmail().equals(email))
+                .findFirst();
+    }
+
     @PostConstruct
     public void init() {
-        User user1 = new User(0L, "didwoah", "sss", "jaemo", "woah1234", 0, 0, 0);
+        User user1 = new User(0L, "didwoah", "animalstory7@gmail.com", "jaemo", "woah1234", 0, 0, 0);
         User user11 = save(user1);
         log.info("user1 uid: {}, name: {}", user11.getUid(), user11.getName());
 

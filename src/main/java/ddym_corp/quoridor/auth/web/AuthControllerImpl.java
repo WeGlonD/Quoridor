@@ -1,9 +1,10 @@
 package ddym_corp.quoridor.auth.web;
 
 import ddym_corp.quoridor.auth.domain.login.LoginServiceImpl;
+import ddym_corp.quoridor.oAuth2.callbackParams.KakaoCallbackDto;
+import ddym_corp.quoridor.oAuth2.service.OAuthLoginService;
 import ddym_corp.quoridor.user.User;
 import lombok.RequiredArgsConstructor;
-//import org.springframework.transaction.annotation.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,7 @@ import static ddym_corp.quoridor.auth.web.SessionConst.*;
 public class AuthControllerImpl implements AuthController {
 
     private final LoginServiceImpl loginService;
+    private final OAuthLoginService oAuthLoginService;
     @PostMapping("/users/login")
     public User login(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request) {
 
@@ -64,9 +66,32 @@ public class AuthControllerImpl implements AuthController {
 
     @PostMapping(value = "/users/update")
     public User userInfoUpdate(@Valid @RequestBody UserUpdateDto userUpdateDto, HttpServletRequest request){
-        HttpSession session = request.getSession();
+        HttpSession session = request.getSession(false);
         Long uid = (Long) session.getAttribute(USER_ID);
         return loginService.userUpdate(uid, userUpdateDto);
+    }
+
+    @GetMapping("/kakao/callback")
+    public User loginKaKao(@RequestParam("code") String code, HttpServletRequest request){
+        KakaoCallbackDto kakaoCallbackDto = new KakaoCallbackDto();
+        kakaoCallbackDto.setCode(code);
+
+        User loginUser = oAuthLoginService.login(kakaoCallbackDto);
+        log.info("kakao login? {}", loginUser);
+        //로그인 실패처리
+        if (loginUser == null){
+            // 400 예외처리
+        }
+
+        //로그인 성공처리
+        HttpSession session = request.getSession();
+        log.info("login id: {} session id: {}", loginUser.getLoginId(), session.getId());
+        //세션 유지시간 1800초
+        session.setMaxInactiveInterval(1800);
+        session.setAttribute(USER_ID, loginUser.getUid());
+
+        log.info("session time = {}", session.getMaxInactiveInterval());
+        return loginUser;
     }
 
 //    @GetMapping(value = "/users")

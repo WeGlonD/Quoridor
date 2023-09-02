@@ -1,5 +1,7 @@
 package ddym_corp.quoridor.match.repository;
 
+import ddym_corp.quoridor.match.WaitingUser;
+
 import java.util.Optional;
 
 public interface MatchRepository {

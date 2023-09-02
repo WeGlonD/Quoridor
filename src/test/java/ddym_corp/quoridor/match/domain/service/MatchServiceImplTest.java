@@ -1,6 +1,6 @@
 package ddym_corp.quoridor.match.domain.service;
 
-import ddym_corp.quoridor.match.repository.WaitingUser;
+import ddym_corp.quoridor.match.WaitingUser;
 import ddym_corp.quoridor.match.service.MatchService;
 import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.UserRepository;
@@ -37,9 +37,9 @@ class MatchServiceImplTest {
         user2.setUid(uu2.getUid());
 
         //when
-        Long gameID1 = matchService.selectPartner(user1.getUid(),user1.getGameType()).getGameId();
-        Long gameID2 = matchService.selectPartner(user2.getUid(),user2.getGameType()).getGameId();
-        Long gameID3 = matchService.selectPartner(user1.getUid(),user1.getGameType()).getGameId();
+        Long gameID1 = matchService.findOpponent(user1.getUid(),user1.getGameType()).getGameId();
+        Long gameID2 = matchService.findOpponent(user2.getUid(),user2.getGameType()).getGameId();
+        Long gameID3 = matchService.findOpponent(user1.getUid(),user1.getGameType()).getGameId();
 
 
         //then
