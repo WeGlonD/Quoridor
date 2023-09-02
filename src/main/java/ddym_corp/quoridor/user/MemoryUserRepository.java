@@ -64,13 +64,17 @@ public class MemoryUserRepository implements UserRepository{
 
     @PostConstruct
     public void init() {
-        User user1 = new User(0L, "didwoah", "animalstory7@gmail.com", "jaemo", "woah1234", 0, 0, 0);
+        User user1 = new User(0L, "didwoah", "animalstory7@gmail.com", "jaemo", "1111", 0, 0, 0);
         User user11 = save(user1);
         log.info("user1 uid: {}, name: {}", user11.getUid(), user11.getName());
 
-        User user2 = new User(0L, "retomoo", "ssss", "dw", "ehddnjs1234", 0, 0, 0);
+        User user2 = new User(0L, "retomoo", "ssss", "dw", "1111", 0, 0, 0);
         User user22 = save(user2);
         log.info("user2 uid: {}, name: {}", user22.getUid(), user22.getName());
+
+        User user3 = new User(0L, "irsam78", "csyun121614@gmail.com", "minseok", "1111", 0, 0, 0);
+        User user33 = save(user2);
+        log.info("user3 uid: {}, name: {}", user33.getUid(), user33.getName());
     }
 
     @Override
