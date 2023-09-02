@@ -8,6 +8,7 @@ import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,8 +18,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Slf4j
-@Service
-@RequiredArgsConstructor
+@Component
 public class OAuthLoginService {
     private final UserRepository userRepository;
     private final Map<OAuthProvider, OAuthApiClient> clients;
