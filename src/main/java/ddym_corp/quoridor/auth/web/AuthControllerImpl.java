@@ -1,6 +1,7 @@
 package ddym_corp.quoridor.auth.web;
 
 import ddym_corp.quoridor.auth.domain.login.LoginServiceImpl;
+import ddym_corp.quoridor.auth.web.exception.UserNotFoundException;
 import ddym_corp.quoridor.oAuth2.callbackParams.KakaoCallbackDto;
 import ddym_corp.quoridor.oAuth2.service.OAuthLoginService;
 import ddym_corp.quoridor.user.User;
@@ -79,8 +80,8 @@ public class AuthControllerImpl implements AuthController {
         User loginUser = oAuthLoginService.login(kakaoCallbackDto);
         log.info("kakao login? {}", loginUser);
         //로그인 실패처리
-        if (loginUser == null){
-            // 400 예외처리
+        if (loginUser.getUid() == null){
+            throw new UserNotFoundException(String.format("kakao email not found, please signup your email is %s", loginUser.getEmail()));
         }
 
         //로그인 성공처리

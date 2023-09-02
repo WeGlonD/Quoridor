@@ -39,9 +39,10 @@ public class OAuthLoginService {
      */
     public User login(OAuthCallbackParams params) {
         OAuthInfoResponse oAuthInfoResponse = request(params);
-        Optional<User> optionalUser = userRepository.findByEmail(oAuthInfoResponse.getEmail());
+        String email = oAuthInfoResponse.getEmail();
+        Optional<User> optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isEmpty()){
-            return null;
+            return new User(email);
         }
         return optionalUser.get();
     }
