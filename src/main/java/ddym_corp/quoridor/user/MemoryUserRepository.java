@@ -73,7 +73,7 @@ public class MemoryUserRepository implements UserRepository{
         log.info("user2 uid: {}, name: {}", user22.getUid(), user22.getName());
 
         User user3 = new User(0L, "irsam78", "csyun121614@gmail.com", "minseok", "1111", 0, 0, 0);
-        User user33 = save(user2);
+        User user33 = save(user3);
         log.info("user3 uid: {}, name: {}", user33.getUid(), user33.getName());
     }
 

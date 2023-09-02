@@ -6,10 +6,8 @@ import ddym_corp.quoridor.oAuth2.infoResponse.OAuthInfoResponse;
 import ddym_corp.quoridor.oAuth2.callbackParams.OAuthCallbackParams;
 import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.UserRepository;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Map;
