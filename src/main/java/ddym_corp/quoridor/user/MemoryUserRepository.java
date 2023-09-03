@@ -1,5 +1,6 @@
 package ddym_corp.quoridor.user;
 
+import ddym_corp.quoridor.game.service.Elo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
@@ -20,6 +21,7 @@ public class MemoryUserRepository implements UserRepository{
     @Override
     public User save(User user) {
         user.setUid(++sequence);
+        user.setScore(Elo.INIT_SCORE);
         store.put(user.getUid(), user);
         return user;
     }

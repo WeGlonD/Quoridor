@@ -2,6 +2,7 @@ package ddym_corp.quoridor.game.repository;
 
 import ddym_corp.quoridor.game.service.Room;
 import ddym_corp.quoridor.history.sevice.HistoryService;
+import ddym_corp.quoridor.ranking.domain.service.RankingService;
 import ddym_corp.quoridor.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,6 +21,7 @@ import java.util.concurrent.atomic.AtomicLong;
 public class MemoryGameRepository implements GameRepository {
     private final UserRepository userRepository;
     private final HistoryService historyService;
+    private final RankingService rankingService;
     private static Map<Long, Room> gameRooms = new ConcurrentHashMap<>();;
     private static AtomicLong sequence = new AtomicLong(0);;
     private static AtomicLong dateInLong = new AtomicLong(0);;
@@ -61,7 +63,7 @@ public class MemoryGameRepository implements GameRepository {
      * @return
      */
     private Room getRoom() {
-        Room room = new Room(userRepository, historyService);
+        Room room = new Room(userRepository, historyService, rankingService);
         room.setGameId(makeGameId());
         return room;
     }
@@ -89,7 +91,7 @@ public class MemoryGameRepository implements GameRepository {
     @PostConstruct
     private void init() {
         gameRooms = new LinkedHashMap<>();
-        Room room = new Room(userRepository, historyService);
+        Room room = new Room(userRepository, historyService, rankingService);
         room.setGameId(1L);
         gameRooms.put(1L, room);
     }

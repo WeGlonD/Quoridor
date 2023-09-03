@@ -13,8 +13,9 @@ public class RankingUser {
 //    private int totalGames;
 //    private int winGames;
     private Long uid;
+    private String name;
 
     public static RankingUser convertToRankingUser(ZSetOperations.TypedTuple<Long> typedTuple) {
-        return new RankingUser((BigDecimal.valueOf(typedTuple.getScore())).intValue(), typedTuple.getValue());
+        return new RankingUser((BigDecimal.valueOf(typedTuple.getScore())).intValue(), typedTuple.getValue(), null);
     }
 }

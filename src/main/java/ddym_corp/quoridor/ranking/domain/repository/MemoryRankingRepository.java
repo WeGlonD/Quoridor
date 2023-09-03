@@ -1,5 +1,6 @@
 package ddym_corp.quoridor.ranking.domain.repository;
 
+import ddym_corp.quoridor.game.service.Elo;
 import ddym_corp.quoridor.ranking.RankingUser;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +22,7 @@ public class MemoryRankingRepository implements RankingRepository {
 
     @Override
     public RankingUser save(Long uid) {
-        RankingUser rankingUser = new RankingUser(0, uid);
+        RankingUser rankingUser = new RankingUser(Elo.INIT_SCORE, uid, null);
         rankingBST.add(rankingUser);
         rankingHash.put(uid, rankingUser);
 
@@ -30,14 +31,29 @@ public class MemoryRankingRepository implements RankingRepository {
 
     @Override
     public RankingUser update(Long uid, int preScore, int nxtScore) {
-        RankingUser preRankingUser = new RankingUser(preScore, uid);
+        RankingUser preRankingUser = new RankingUser(preScore, uid, null);
         rankingBST.remove(preRankingUser);
-        RankingUser nxtRankingUser = new RankingUser(nxtScore, uid);
+        RankingUser nxtRankingUser = new RankingUser(nxtScore, uid, null);
         rankingBST.add(nxtRankingUser);
 
         rankingHash.replace(uid, nxtRankingUser);
 
         return nxtRankingUser;
+    }
+
+    @Override
+    public RankingUser delete(Long uid) {
+        RankingUser rankingUser = rankingHash.get(uid);
+        rankingHash.remove(uid);
+
+        rankingBST.remove(rankingUser);
+        return rankingUser;
+    }
+
+    @Override
+    public void clearAll() {
+        rankingHash.clear();
+        rankingBST.clear();
     }
 
     @Override
@@ -76,8 +92,8 @@ public class MemoryRankingRepository implements RankingRepository {
 
     @PostConstruct
     void init() {
-        RankingUser jaemo = new RankingUser(0, 1L);
-        RankingUser dw = new RankingUser(0, 2L);
+        RankingUser jaemo = new RankingUser(0, 1L, null);
+        RankingUser dw = new RankingUser(0, 2L, null);
 
         rankingBST.add(jaemo);
         rankingBST.add(dw);

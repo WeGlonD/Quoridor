@@ -24,6 +24,16 @@ public class MemoryRankingService implements RankingService {
     }
 
     @Override
+    public RankingUser signOut(Long uid) {
+        return rankingRepository.delete(uid);
+    }
+
+    @Override
+    public void removeAll() {
+        rankingRepository.clearAll();
+    }
+
+    @Override
     public String findRank(RankingUser rankingUser) {
         return rankingRepository.getRank(rankingUser);
     }

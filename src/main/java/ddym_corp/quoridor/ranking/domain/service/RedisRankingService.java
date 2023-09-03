@@ -1,6 +1,7 @@
 package ddym_corp.quoridor.ranking.domain.service;
 
 import ddym_corp.quoridor.ranking.RankingUser;
+import ddym_corp.quoridor.user.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -24,11 +25,12 @@ public class RedisRankingService implements RankingService {
     private final String key = "ranking";
 
     private final RedisTemplate<String,Long> redisTemplate;
+    private final UserRepository userRepository;
 
     @Override
     @Transactional
     public RankingUser join(Long uid) {
-        RankingUser rankingUser = new RankingUser(0,uid);
+        RankingUser rankingUser = new RankingUser(0,uid, null);
         redisTemplate.opsForZSet().add(key, uid, 0);
         return rankingUser;
     }
@@ -39,7 +41,21 @@ public class RedisRankingService implements RankingService {
         redisTemplate.opsForZSet().remove(key, uid);
         redisTemplate.opsForZSet().add(key, uid, nxtScore);
 
-        return new RankingUser(nxtScore, uid);
+        return new RankingUser(nxtScore, uid, null);
+    }
+
+    @Override
+    public RankingUser signOut(Long uid) {
+        Long removeCnt = redisTemplate.opsForZSet().remove(key, uid);
+        if(removeCnt == null || removeCnt == 0) {
+            throw new IllegalStateException("랭킹삭제 실패. 존재하지 않는 유저랭킹 정보입니다.");
+        }
+        return null;
+    }
+
+    @Override
+    public void removeAll() {
+        redisTemplate.opsForZSet().removeRange(key, 0, -1);
     }
 
     @Override
@@ -71,8 +87,9 @@ public class RedisRankingService implements RankingService {
         Long idx = findIndex(uid);
         ZSetOperations<String, Long> zSetOperations = redisTemplate.opsForZSet();
 
-        Set<ZSetOperations.TypedTuple<Long>> typedTuples = zSetOperations.reverseRangeWithScores(key, idx, idx + 10);
+        Set<ZSetOperations.TypedTuple<Long>> typedTuples = zSetOperations.reverseRangeWithScores(key, idx, idx + size);
         List<RankingUser> below = typedTuples.stream().map(RankingUser::convertToRankingUser).toList();
+        below.forEach(rankingUser -> rankingUser.setName(userRepository.findByuID(rankingUser.getUid()).get().getName()));
         log.info("below list : {} empty?{}", below.getClass(), below.isEmpty());
 
         return below;
@@ -86,8 +103,9 @@ public class RedisRankingService implements RankingService {
 
         List<RankingUser> above = new ArrayList<>();
         if(idx - 1 > -1) {
-            Set<ZSetOperations.TypedTuple<Long>> typedTuples = zSetOperations.reverseRangeWithScores(key, idx - 10, idx - 1);
+            Set<ZSetOperations.TypedTuple<Long>> typedTuples = zSetOperations.reverseRangeWithScores(key, idx - size, idx - 1);
             above = typedTuples.stream().map(RankingUser::convertToRankingUser).toList();
+            above.forEach(rankingUser -> rankingUser.setName(userRepository.findByuID(rankingUser.getUid()).get().getName()));
             log.info("above list : {} empty?{}", above.getClass(), above.isEmpty());
         }
         return above;

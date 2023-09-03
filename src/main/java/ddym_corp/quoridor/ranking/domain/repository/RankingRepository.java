@@ -8,6 +8,8 @@ public interface RankingRepository {
     //crud
     RankingUser save(Long uid);
     RankingUser update(Long uid, int preScore, int nxtScore);
+    RankingUser delete(Long uid);
+    void clearAll();
     RankingUser findOne(Long uid);
 
     String getRank(RankingUser rankingUser);

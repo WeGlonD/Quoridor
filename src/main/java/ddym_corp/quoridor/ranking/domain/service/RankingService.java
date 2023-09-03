@@ -7,6 +7,9 @@ import java.util.List;
 public interface RankingService {
     RankingUser join(Long uid);
     RankingUser update(Long uid, int preScore, int nxtScore);
+    RankingUser signOut(Long uid);
+
+    void removeAll();
     String findRank(RankingUser rankingUser);
     /**
      * 주어진 유저와 그의 위로 10개 아래로 10개 랭킹 유저를 반환
