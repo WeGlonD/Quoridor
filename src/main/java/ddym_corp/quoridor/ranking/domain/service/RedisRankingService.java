@@ -84,7 +84,9 @@ public class RedisRankingService implements RankingService {
     @Override
     public List<RankingUser> findDownward(Long uid, int size) {
         //해당 uid의 인덱스
-        Long idx = findIndex(uid);
+        Long idx;
+        if(uid < 0) idx = 0L;
+        else idx = findIndex(uid);
         ZSetOperations<String, Long> zSetOperations = redisTemplate.opsForZSet();
 
         Set<ZSetOperations.TypedTuple<Long>> typedTuples = zSetOperations.reverseRangeWithScores(key, idx, idx + size);
