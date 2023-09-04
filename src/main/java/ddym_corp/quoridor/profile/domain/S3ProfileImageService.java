@@ -32,8 +32,8 @@ public class S3ProfileImageService implements ProfileImageService {
     private final ProfileImageRepository profileImageRepository;
 
     public String upload(MultipartFile file, Long uid) {
-        String preUrl = profileImageRepository.findOne(uid);
         log.info("S3ProfileImageService upload");
+        String preUrl = profileImageRepository.findOne(uid);
         log.info("preUrl: {}", preUrl);
         if(preUrl != null) {
             amazonS3Client.deleteObject(bucket + dir, extractFileName(preUrl));
