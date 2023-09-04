@@ -36,6 +36,7 @@ public class ProfileImageController {
         HttpSession session = request.getSession(false);
         session.setMaxInactiveInterval(1800);
         Long uid = (Long) session.getAttribute(SessionConst.USER_ID);
+        log.info("ProfileImageController uploadProfile - uid : {}", uid);
 
         String url = profileImageService.upload(file, uid);
         if(url != null) {

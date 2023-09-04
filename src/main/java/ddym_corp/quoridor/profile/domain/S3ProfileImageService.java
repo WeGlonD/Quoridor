@@ -33,17 +33,21 @@ public class S3ProfileImageService implements ProfileImageService {
 
     public String upload(MultipartFile file, Long uid) {
         String preUrl = profileImageRepository.findOne(uid);
+        log.info("S3ProfileImageService upload");
+        log.info("preUrl: {}", preUrl);
         if(preUrl != null) {
             amazonS3Client.deleteObject(bucket + dir, extractFileName(preUrl));
         }
 
         try {
-            String fileName = file.getOriginalFilename();
-            String storeFileName = createStoreFileName(fileName);
+            String fileName = file.getOriginalFilename(); log.info("originalFileName: {}", fileName);
+            String storeFileName = createStoreFileName(fileName); log.info("storeFileName: {}", storeFileName);
 
             ObjectMetadata metadata= new ObjectMetadata();
             metadata.setContentType(file.getContentType());
             metadata.setContentLength(file.getSize());
+            log.info("metadata - ContentType: {}, ContentLength: {}", file.getContentType(), file.getSize());
+
             amazonS3Client.putObject(
                     new PutObjectRequest(bucket + dir, storeFileName, file.getInputStream(), metadata)
                             .withCannedAcl(CannedAccessControlList.PublicRead)
@@ -61,7 +65,9 @@ public class S3ProfileImageService implements ProfileImageService {
     }
 
     public String get(Long uid) {
+        log.info("S3ProfileImageService get - uid: {}", uid);
         String url = profileImageRepository.findOne(uid);
+        log.info("Service - url: {}", url);
         if(url != null) {
             return url;
         }
@@ -69,7 +75,9 @@ public class S3ProfileImageService implements ProfileImageService {
     }
 
     public String delete(Long uid) {
+        log.info("S3ProfileImageService delete - uid: {}", uid);
         String url = profileImageRepository.findOne(uid);
+        log.info("Service - url: {}", url);
         if(url != null){
             profileImageRepository.delete(uid);
             amazonS3Client.deleteObject(bucket + dir, extractFileName(url));
@@ -92,6 +100,8 @@ public class S3ProfileImageService implements ProfileImageService {
 
     private String extractFileName(String url) {
         int pos = url.lastIndexOf("/");
-        return url.substring(pos + 1);
+        String returnStr = url.substring(pos + 1);
+        log.info("extractFileName: {}", returnStr);
+        return returnStr;
     }
 }
