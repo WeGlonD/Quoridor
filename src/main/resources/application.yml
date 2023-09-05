@@ -15,8 +15,27 @@ oauth:
 #    url:
 #      auth: https://nid.naver.com
 #      api: https://openapi.naver.com
+
 spring:
   redis:
     host: 43.200.182.242
     port: 6379
     password: quoridor
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 20MB
+server:
+  tomcat:
+    max-http-form-post-size: 20MB
+
+cloud:
+  aws:
+    s3:
+      bucket: s3-bucket-quoridor
+      dir: /profile
+    stack.auto: false
+    region.static: ap-northeast-2
+    credentials:
+      access-key: AKIAXTQSGXOG7HFILTFA
+      secret-key: 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
