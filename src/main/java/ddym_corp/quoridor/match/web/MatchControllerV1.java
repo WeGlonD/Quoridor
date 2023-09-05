@@ -21,14 +21,14 @@ import static ddym_corp.quoridor.auth.web.SessionConst.USER_ID;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@RestController
+//@RestController
 public class MatchControllerV1 implements MatchController {
 
     private final MatchService matchService;
     private final UserRepository userRepository;
     @Override
     @PostMapping("/match")
-    public MatchResponseDto findPartner(@Valid @RequestBody MatchDto matchDto, HttpServletRequest request) {
+    public MatchResponseDto matchStart(@Valid @RequestBody MatchDto matchDto, HttpServletRequest request) {
 
         // 세션으로부터 uid 받아오기
         HttpSession session = request.getSession(false);

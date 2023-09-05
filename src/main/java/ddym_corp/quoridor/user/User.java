@@ -4,11 +4,10 @@ import lombok.*;
 
 //import javax.persistence.*;
 
-
-@Data
-//@Entity
+@Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class User {
 
     //@Id @GeneratedValue(strategy = GenerationType.IDENTITY)

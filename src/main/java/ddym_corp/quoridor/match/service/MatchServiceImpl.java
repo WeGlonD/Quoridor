@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.Random;
 
 @Slf4j
-@Service
+//@Service
 @RequiredArgsConstructor
 public class MatchServiceImpl implements MatchService {
 

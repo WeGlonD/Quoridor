@@ -1,9 +1,11 @@
 package ddym_corp.quoridor.match.service.background;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
-public class QueueUser {
-    private Integer uid;
+@AllArgsConstructor
+public class PreMatchedUser {
+    private Long uid;
     private Integer score;
 }
