@@ -1,6 +1,6 @@
 package ddym_corp.quoridor.history.sevice;
 
-import ddym_corp.quoridor.auth.domain.login.LoginServiceImpl;
+import ddym_corp.quoridor.user.auth.login.LoginServiceImpl;
 import ddym_corp.quoridor.history.History;
 import ddym_corp.quoridor.history.repository.HistoryRepository;
 import ddym_corp.quoridor.history.utils.Histories20ResponseDto;

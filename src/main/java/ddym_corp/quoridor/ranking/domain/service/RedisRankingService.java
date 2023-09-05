@@ -1,14 +1,13 @@
 package ddym_corp.quoridor.ranking.domain.service;
 
 import ddym_corp.quoridor.ranking.RankingUser;
-import ddym_corp.quoridor.user.UserRepository;
+import ddym_corp.quoridor.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.ZSetOperations;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;

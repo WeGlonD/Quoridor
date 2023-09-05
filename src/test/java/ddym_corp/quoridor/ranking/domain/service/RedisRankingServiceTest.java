@@ -2,18 +2,13 @@ package ddym_corp.quoridor.ranking.domain.service;
 
 import ddym_corp.quoridor.ranking.RankingUser;
 import ddym_corp.quoridor.user.User;
-import ddym_corp.quoridor.user.UserRepository;
-import jakarta.annotation.PostConstruct;
-import jakarta.annotation.PreDestroy;
+import ddym_corp.quoridor.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.event.annotation.AfterTestClass;
-import org.springframework.test.context.event.annotation.AfterTestExecution;
 
 import java.util.List;
 

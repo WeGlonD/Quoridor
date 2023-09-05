@@ -1,9 +1,9 @@
 package ddym_corp.quoridor;
 
-import ddym_corp.quoridor.auth.domain.login.LoginServiceImpl;
-import ddym_corp.quoridor.auth.web.UserUpdateDto;
+import ddym_corp.quoridor.user.auth.login.LoginServiceImpl;
+import ddym_corp.quoridor.user.auth.web.dto.UserUpdateDto;
 import ddym_corp.quoridor.user.User;
-import ddym_corp.quoridor.user.UserRepository;
+import ddym_corp.quoridor.user.repository.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

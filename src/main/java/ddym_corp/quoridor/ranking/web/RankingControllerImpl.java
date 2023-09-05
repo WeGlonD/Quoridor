@@ -1,7 +1,6 @@
 package ddym_corp.quoridor.ranking.web;
 
 import ddym_corp.quoridor.ranking.RankingUser;
-import ddym_corp.quoridor.ranking.domain.repository.RankingRepository;
 import ddym_corp.quoridor.ranking.domain.service.RankingService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -13,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static ddym_corp.quoridor.auth.web.SessionConst.*;
+import static ddym_corp.quoridor.user.auth.web.uitls.SessionConst.USER_ID;
 
 @RestController
 @Slf4j

@@ -1,6 +1,6 @@
 package ddym_corp.quoridor.history.web;
 
-import ddym_corp.quoridor.auth.web.SessionConst;
+import ddym_corp.quoridor.user.auth.web.uitls.SessionConst;
 import ddym_corp.quoridor.history.History;
 import ddym_corp.quoridor.history.sevice.HistoryService;
 import ddym_corp.quoridor.history.utils.Histories20ResponseDto;

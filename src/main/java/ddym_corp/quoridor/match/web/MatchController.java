@@ -9,10 +9,5 @@ import lombok.Setter;
 
 public interface MatchController {
     MatchResponseDto matchStart(MatchDto matchDto, HttpServletRequest request);
-
-    @NoArgsConstructor
-    @Getter @Setter
-    static class MatchDto {
-        private int gameType; //ex) 1vs1 10분 = 0번
-    }
+    MatchResponseDto matchCheck(HttpServletRequest request);
 }

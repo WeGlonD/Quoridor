@@ -3,7 +3,7 @@ package ddym_corp.quoridor.history.sevice;
 import ddym_corp.quoridor.history.History;
 import ddym_corp.quoridor.history.utils.Histories20ResponseDto;
 import ddym_corp.quoridor.user.User;
-import ddym_corp.quoridor.user.UserRepository;
+import ddym_corp.quoridor.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;

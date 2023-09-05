@@ -1,8 +1,9 @@
 package ddym_corp.quoridor.match.service.foreground;
 
+import ddym_corp.quoridor.match.foreground.service.MatchService;
 import ddym_corp.quoridor.match.utils.MatchResponseDto;
 import ddym_corp.quoridor.user.User;
-import ddym_corp.quoridor.user.UserRepository;
+import ddym_corp.quoridor.user.repository.UserRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

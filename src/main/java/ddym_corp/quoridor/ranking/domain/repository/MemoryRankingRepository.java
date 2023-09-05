@@ -1,10 +1,9 @@
 package ddym_corp.quoridor.ranking.domain.repository;
 
-import ddym_corp.quoridor.game.service.Elo;
+import ddym_corp.quoridor.gameRoom.service.scoreLogic.Elo;
 import ddym_corp.quoridor.ranking.RankingUser;
 import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
 
 import java.util.*;
 

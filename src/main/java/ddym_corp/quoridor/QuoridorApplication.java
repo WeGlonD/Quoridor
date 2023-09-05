@@ -1,7 +1,6 @@
 package ddym_corp.quoridor;
 
-import ddym_corp.quoridor.match.service.background.BackgroundMatchLogic;
-import io.lettuce.core.protocol.Command;
+import ddym_corp.quoridor.match.background.BackgroundMatchLogic;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
