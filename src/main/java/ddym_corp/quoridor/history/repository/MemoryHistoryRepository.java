@@ -46,17 +46,4 @@ public class MemoryHistoryRepository implements HistoryRepository{
                 .limit(20) // Select top 20
                 .collect(Collectors.toList());
     }
-
-
-    @PostConstruct
-    void init(){
-        for (int gameId = 0; gameId<10; gameId++){
-            History history = new History((long) gameId, 2L, 1L, 10, 10, new Timestamp(System.currentTimeMillis()));
-            save(history);
-        }
-        for (int gameId = 10; gameId<25; gameId++){
-            History history = new History((long) gameId, 1L, 2L, 10, 10, new Timestamp(System.currentTimeMillis()));
-            save(history);
-        }
-    }
 }
