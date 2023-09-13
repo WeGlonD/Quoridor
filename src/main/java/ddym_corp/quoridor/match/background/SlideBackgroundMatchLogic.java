@@ -41,7 +41,7 @@ public class SlideBackgroundMatchLogic implements BackgroundMatchLogic{
         @Override
         public void run() {
             while (true) {
-//                log.info("store size : {}", store.size());
+                log.info("store size : {}", store.size());
                 while (store.size() > 1) {
                     logic();
                 }
@@ -92,6 +92,7 @@ public class SlideBackgroundMatchLogic implements BackgroundMatchLogic{
             // push 2 MatchedUser to matchRepository store
             matchRepository.save(new MatchedUser(first.getUid(), 0, history.getGameId()));
             matchRepository.save(new MatchedUser(second.getUid(), 1, history.getGameId()));
+            log.info("{} & {} match", first.getUid(), second.getUid());
             log.info("matchRepository save completed");
         }
     }
