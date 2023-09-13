@@ -41,7 +41,7 @@ public class SlideBackgroundMatchLogic implements BackgroundMatchLogic{
         @Override
         public void run() {
             while (true) {
-                log.info("store size : {}", store.size());
+//                log.info("store size : {}", store.size());
                 while (store.size() > 1) {
                     logic();
                 }
