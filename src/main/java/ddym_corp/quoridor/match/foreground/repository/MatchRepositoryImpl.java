@@ -17,7 +17,8 @@ public class MatchRepositoryImpl implements MatchRepository{
     }
     @Override
     public void delete(Long uid){
-        store.remove(uid);
+        MatchedUser matchedUser = findByUid(uid).get();
+        store.remove(matchedUser);
         log.info("foreground store size {}",store.size());
     }
     @Override
