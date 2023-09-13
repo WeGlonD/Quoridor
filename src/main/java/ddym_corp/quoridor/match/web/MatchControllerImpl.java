@@ -36,7 +36,7 @@ public class MatchControllerImpl implements MatchController{
     }
     @Override
     @PostMapping("/matched_users")
-    public MatchResponseDto matchStart(@RequestBody MatchDto matchDto, HttpServletRequest request) {
+    public String matchStart(@RequestBody MatchDto matchDto, HttpServletRequest request) {
 
         // 세션으로부터 uid 받아오기
         Long uid = getUid(request);
@@ -50,7 +50,7 @@ public class MatchControllerImpl implements MatchController{
         // MatchService 대기열 참여
         matchService.join(uid, getScore(uid));
 
-        return null; // 성공처리
+        return "OK"; // 성공처리
     }
 
     /**

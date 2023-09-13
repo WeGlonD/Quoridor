@@ -8,6 +8,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.Setter;
 
 public interface MatchController {
-    MatchResponseDto matchStart(MatchDto matchDto, HttpServletRequest request);
+    String matchStart(MatchDto matchDto, HttpServletRequest request);
     MatchResponseDto matchCheck(HttpServletRequest request);
 }
