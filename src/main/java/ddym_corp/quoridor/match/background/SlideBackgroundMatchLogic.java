@@ -37,12 +37,24 @@ public class SlideBackgroundMatchLogic implements BackgroundMatchLogic{
         store.add(queueUser);
     }
 
+    @Override
+    public void divide(Long uid){
+        for (PreMatchedUser user : store){
+            if (user.getUid() == uid){
+                store.remove(user);
+                return;
+            }
+        }
+    }
+
     private class MyThread extends Thread{
         @Override
         public void run() {
             while (true) {
-                while (store.size() > 1) {
-                    logic();
+                synchronized (PreMatchedUser.class) {
+                    while (store.size() > 1) {
+                        logic();
+                    }
                 }
                 try {
                     Thread.sleep(3000);

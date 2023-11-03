@@ -52,7 +52,7 @@ public class MatchServiceImpl implements MatchService{
     }
     @Override
     public void exit(Long uid){
-        matchRepository.delete(uid);
+        backgroundMatchLogic.divide(uid);
     }
 
 }

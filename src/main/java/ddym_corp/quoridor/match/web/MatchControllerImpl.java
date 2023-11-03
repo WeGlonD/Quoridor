@@ -1,5 +1,6 @@
 package ddym_corp.quoridor.match.web;
 
+import ddym_corp.quoridor.match.background.PreMatchedUser;
 import ddym_corp.quoridor.match.foreground.service.MatchService;
 import ddym_corp.quoridor.match.utils.MatchResponseDto;
 import ddym_corp.quoridor.user.User;
@@ -33,6 +34,11 @@ public class MatchControllerImpl implements MatchController{
         return matchService.check(uid);
     }
 
+    /**
+     * 대기열 취소할 때 혹시 매칭이 되어있으면 matchResponseDto 아니라면 null 반환
+     * @param request
+     * @return MatchResponseDto or null
+     */
     @DeleteMapping("/matched_users")
     public MatchResponseDto escape(HttpServletRequest request){
 
@@ -40,12 +46,14 @@ public class MatchControllerImpl implements MatchController{
         Long uid = getUid(request);
 
         // 성공하면 matchResponseDto 실패하면 null 반환
-        MatchResponseDto dto = matchService.check(uid);
-        if(dto == null){
-            matchService.exit(uid);
-            return null;
+        synchronized (PreMatchedUser.class) {
+            MatchResponseDto dto = matchService.check(uid);
+            if (dto == null) {
+                matchService.exit(uid);
+                return null;
+            }
+            return dto;
         }
-        return dto;
     }
     @Override
     @PostMapping("/matched_users")
