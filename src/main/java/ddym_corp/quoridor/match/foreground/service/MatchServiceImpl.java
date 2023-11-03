@@ -50,5 +50,9 @@ public class MatchServiceImpl implements MatchService{
     public void join(Long uid, Integer score){
         backgroundMatchLogic.join(new PreMatchedUser(uid, score));
     }
+    @Override
+    public void exit(Long uid){
+        matchRepository.delete(uid);
+    }
 
 }

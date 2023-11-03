@@ -6,12 +6,10 @@ import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -33,6 +31,21 @@ public class MatchControllerImpl implements MatchController{
 
         // 성공하면 matchResponseDto 실패하면 null 반환
         return matchService.check(uid);
+    }
+
+    @DeleteMapping("/matched_users")
+    public MatchResponseDto escape(HttpServletRequest request){
+
+        // 세션으로부터 uid 받아오기
+        Long uid = getUid(request);
+
+        // 성공하면 matchResponseDto 실패하면 null 반환
+        MatchResponseDto dto = matchService.check(uid);
+        if(dto == null){
+            matchService.exit(uid);
+            return null;
+        }
+        return dto;
     }
     @Override
     @PostMapping("/matched_users")
