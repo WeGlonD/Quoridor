@@ -98,6 +98,17 @@ public class AuthControllerImpl implements AuthController {
         return loginUser;
     }
 
+    @PostMapping("/users/help/pw")
+    public String helpPassword(@Valid @RequestBody String loginId){
+        try {
+            String newPassword = loginService.resetPassWord(loginId);
+            return newPassword;
+        }catch (RuntimeException e){
+            log.error("helpPassword",e);
+            throw new UserNotFoundException("LoginId is not valid, plz check again");
+        }
+    }
+
 //    @GetMapping(value = "/users")
 //    public List<Long> usersNamed(@RequestParam("name") String name, HttpServletRequest request){
 //        HttpSession session = request.getSession();

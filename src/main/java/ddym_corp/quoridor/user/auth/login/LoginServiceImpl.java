@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -66,11 +67,24 @@ public class LoginServiceImpl {
             return userRepository.update(preUser);
         }
         else {
-            throw new IllegalStateException("유효하지 않은 회원입니다.");
+            throw new RuntimeException("유효하지 않은 회원입니다.");
         }
     }
 
     public Optional<User> getUserNamed(String name) {
         return userRepository.findByName(name);
+    }
+
+    public String resetPassWord(String loginId){
+        Optional<User> byuID = userRepository.findByLoginId(loginId);
+        if(byuID.isPresent()){
+            User user = byuID.get();
+            String newPassword = UUID.randomUUID().toString().substring(0,10);
+            user.setPassword(newPassword);
+            userRepository.update(user);
+            return newPassword;
+        }else{
+            throw new RuntimeException("not valid userid from resetPassword");
+        }
     }
 }
