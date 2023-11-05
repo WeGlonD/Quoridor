@@ -48,6 +48,9 @@ public class GameRoom {
 
         if(moveMessage.getType() == 9) {
             sessions.add(session);
+            if (sessions.size() == 2) {
+                sendMoveMessage(new MoveMessage(10, 10L,10,10), null);
+            }
             return false;
         }
 
@@ -60,6 +63,9 @@ public class GameRoom {
         // □ 수가 들어올 때마다 History를 DB에 저장.
         // □ 이 게임에 배정되지 않은 유저가 호출한 경우 처리.
         if (getTurn(session) == turn) {
+            if (!sessionCheck(session)) {
+                return true;
+            }
             sendMoveMessage(moveMessage, session);
             String moveStr = moveMessage.getType().toString() + moveMessage.getRow().toString() + moveMessage.getCol().toString();
             log.info("UID {} move {}", uIDs[turn], moveStr);
@@ -70,16 +76,16 @@ public class GameRoom {
                 // 게임이 끝났다는 정보가 들어왔을 때.
                 Long winnerUID = null, loserUID = null;
                 if (moveMessage.getType() == 3) {
-                    // 이긴 수 : 상대방 진영까지 말을 움직이는 수가 들어옴.
-                    winnerUID = uIDs[turn];
-                    loserUID = uIDs[(turn + 1) % 2];
-                }
-                else if (moveMessage.getType() == 4) {
-                    // 진 수 : 시간초과로 패배
+                    // 이긴 수 : 상대방 진영까지 말을 움직이는 수가 들어옴. // 이미 턴이 증가된 상태
                     loserUID = uIDs[turn];
                     winnerUID = uIDs[(turn + 1) % 2];
                 }
-                calcDeltaScore(winnerUID, loserUID);
+                else if (moveMessage.getType() == 4) {
+                    // 진 수 : 시간초과로 패배 // 이미 턴이 증가된 상태
+                    winnerUID = uIDs[turn];
+                    loserUID = uIDs[(turn + 1) % 2];
+                }
+                calcDeltaScore(winnerUID, loserUID, false);
                 sessions.forEach(session1 -> {
                     try {
                         session1.close();
@@ -94,6 +100,24 @@ public class GameRoom {
         return false;
     }
 
+    private boolean sessionCheck(WebSocketSession session) {
+        boolean ret = true;
+        for (WebSocketSession s : sessions) {
+            if (!s.isOpen()) ret = false;
+        }
+        if(!ret) {
+            Long winnerUID = (Long) session.getAttributes().get(USER_ID);
+            Long loserUID = uIDs[(turn + 1)%2];
+            calcDeltaScore(winnerUID,loserUID,true);
+            try {
+                session.close();
+            } catch (IOException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+        return ret;
+    }
+
     /**
      * sessions에 있는 상대방 member에 moveMessage를 보내는 메서드 service(domain)
      * @param message
@@ -102,7 +126,7 @@ public class GameRoom {
      */
     public <T> void sendMoveMessage(T message, WebSocketSession session) {
         sessions.parallelStream().forEach(s -> {
-            if (session != s)
+            if (session == null || session != s)
                 send(s, message);
         });
     }
@@ -137,7 +161,7 @@ public class GameRoom {
      * @param winnerUID
      * @param loserUID
      */
-    private void calcDeltaScore(Long winnerUID, Long loserUID) {
+    private void calcDeltaScore(Long winnerUID, Long loserUID, boolean exited) {
         User winner = userRepository.findByuID(winnerUID).get();
         User loser = userRepository.findByuID(loserUID).get();
         Integer winPreScore = winner.getScore();
@@ -151,18 +175,26 @@ public class GameRoom {
         rankingService.update(winnerUID, winPreScore, winnerScore);
         rankingService.update(loserUID, losePreScore, loserScore);
 
-        sendScore(winnerUID,loserUID,winnerScore,loserScore, winner.getTotalGames(),loser.getTotalGames(),winner.getWinGames(),loser.getWinGames());
+        sendScore(winner, loser, exited);
 
     }
 
-    private void sendScore(Long winnerUID, Long loserUID, int winnerScore, int loserScore, int winnerTotal, int loserTotal, int winnerWins, int loserWins) {
-        sessions.parallelStream().forEach(session -> {
-            if (session.getAttributes().get(USER_ID).equals(winnerUID)) {
-                send(session, new MoveMessage(-1, (long) winnerScore,winnerTotal,winnerWins));
-            }
-            else if (session.getAttributes().get(USER_ID).equals(loserUID)) {
-                send(session, new MoveMessage(-1, (long) loserScore,loserTotal,loserWins));
-            }
-        });
+    private void sendScore(User winner, User loser, boolean exited) {
+        if (exited) {
+            sessions.parallelStream().forEach(session -> {
+                if (session.getAttributes().get(USER_ID).equals(winner.getUid())) {
+                    send(session, new MoveMessage(-1, (long) winner.getScore(), winner.getTotalGames(), winner.getWinGames()));
+                }
+            });
+        }
+        else {
+            sessions.parallelStream().forEach(session -> {
+                if (session.getAttributes().get(USER_ID).equals(winner.getUid())) {
+                    send(session, new MoveMessage(-1, (long) winner.getScore(), winner.getTotalGames(), winner.getWinGames()));
+                } else if (session.getAttributes().get(USER_ID).equals(loser.getUid())) {
+                    send(session, new MoveMessage(-1, (long) loser.getScore(), loser.getTotalGames(), loser.getWinGames()));
+                }
+            });
+        }
     }
 }

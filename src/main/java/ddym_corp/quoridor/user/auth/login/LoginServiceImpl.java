@@ -23,22 +23,25 @@ public class LoginServiceImpl {
 
     public Long join(User user){
         // 같은 이름이 있는 중복 희원X
-        validateDuplicateMember(user);
+        int redundant = validateDuplicateMember(user);
+        if (redundant < 0) return (long) redundant;
         userRepository.save(user);
         rankingService.join(user.getUid());
         return user.getUid();
     }
 
-    private void validateDuplicateMember(User user) {
-        userRepository.findByLoginId(user.getLoginId())
-                .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 ID 입니다.");
-                });
-        userRepository.findByName(user.getName())
-                .ifPresent(m -> {
-                    throw new IllegalStateException("이미 존재하는 이름 입니다.");
-                });
+    private int validateDuplicateMember(User user) {
+        Optional<User> byLoginId = userRepository.findByLoginId(user.getLoginId());
+        if(byLoginId.isPresent()) return -1;
+
+        Optional<User> byName = userRepository.findByName(user.getName());
+        if(byName.isPresent()) return -2;
+
         //이메일도 추가
+        Optional<User> byEmail = userRepository.findByEmail(user.getEmail());
+        if(byEmail.isEmpty()) return -3;
+
+        return 1;
     }
 
     public Optional<User> findOne(Long uid) {

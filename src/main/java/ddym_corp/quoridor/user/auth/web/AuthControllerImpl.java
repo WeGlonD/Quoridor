@@ -8,6 +8,7 @@ import ddym_corp.quoridor.user.auth.web.exception.UserNotFoundException;
 import ddym_corp.quoridor.user.auth.oAuth2.callbackParams.KakaoCallbackDto;
 import ddym_corp.quoridor.user.auth.oAuth2.service.OAuthLoginService;
 import ddym_corp.quoridor.user.User;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -58,12 +59,23 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @PostMapping(value = "/users")
-    public User create(@Valid @RequestBody SignupDto signupDto) {
+    public User create(@Valid @RequestBody SignupDto signupDto, HttpServletResponse response) {
         User user = new User(signupDto.getLoginId(), signupDto.getPassword());
         user.setName(signupDto.getName()); user.setEmail(signupDto.getEmail());
         user.setScore(0); user.setTotalGames(0); user.setWinGames(0);
 
         Long result = loginService.join(user);
+        if (result == -1L) { // 아이디 중복
+            response.setStatus(460);
+            return user;
+        } else if (result == -2L) { // 이름 중복
+            response.setStatus(461);
+            return user;
+        } else if (result == -3L) { // 이메일 중복
+            response.setStatus(462);
+            return user;
+        }
+        response.setStatus(HttpServletResponse.SC_OK);
         user.setUid(result);
         return user;
     }
