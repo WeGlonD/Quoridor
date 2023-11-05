@@ -105,5 +105,13 @@ public class AuthControllerImpl implements AuthController {
 //
 //        return loginService.getUserIdNamed(name);
 //    }
+//    @GetMapping(value = "/users")
+//    public User userInfo(HttpServletRequest request){
+//        HttpSession session = request.getSession();
+//        session.setMaxInactiveInterval(1800);
+//
+//        return loginService.findOne((Long) session.getAttribute(USER_ID)).get();
+//    }
+
 
 }

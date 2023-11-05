@@ -38,6 +38,7 @@ public class LoginServiceImpl {
                 .ifPresent(m -> {
                     throw new IllegalStateException("이미 존재하는 이름 입니다.");
                 });
+        //이메일도 추가
     }
 
     public Optional<User> findOne(Long uid) {
