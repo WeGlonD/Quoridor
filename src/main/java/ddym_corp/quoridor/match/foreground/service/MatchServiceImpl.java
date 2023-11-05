@@ -28,6 +28,7 @@ public class MatchServiceImpl implements MatchService{
     public MatchResponseDto check(Long uid){
         Optional<MatchedUser> optionalMatchedUser = matchRepository.findByUid(uid);
         if (optionalMatchedUser.isEmpty()){
+            log.info("not in store");
             return null;
         }
         // gameId로 상대방 uid 찾기
@@ -48,6 +49,10 @@ public class MatchServiceImpl implements MatchService{
     @Override
     public void join(Long uid, Integer score){
         backgroundMatchLogic.join(new PreMatchedUser(uid, score));
+    }
+    @Override
+    public void exit(Long uid){
+        backgroundMatchLogic.divide(uid);
     }
 
 }

@@ -1,17 +1,16 @@
 package ddym_corp.quoridor.match.web;
 
+import ddym_corp.quoridor.match.background.PreMatchedUser;
 import ddym_corp.quoridor.match.foreground.service.MatchService;
 import ddym_corp.quoridor.match.utils.MatchResponseDto;
 import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
+import jdk.jshell.execution.Util;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Optional;
 
@@ -34,9 +33,31 @@ public class MatchControllerImpl implements MatchController{
         // 성공하면 matchResponseDto 실패하면 null 반환
         return matchService.check(uid);
     }
+
+    /**
+     * 대기열 취소할 때 혹시 매칭이 되어있으면 matchResponseDto 아니라면 null 반환
+     * @param request
+     * @return MatchResponseDto or null
+     */
+    @DeleteMapping("/matched_users")
+    public MatchResponseDto escape(HttpServletRequest request){
+
+        // 세션으로부터 uid 받아오기
+        Long uid = getUid(request);
+
+        // 성공하면 matchResponseDto 실패하면 null 반환
+        synchronized (PreMatchedUser.class) {
+            MatchResponseDto dto = matchService.check(uid);
+            if (dto == null) {
+                matchService.exit(uid);
+                return null;
+            }
+            return dto;
+        }
+    }
     @Override
     @PostMapping("/matched_users")
-    public MatchResponseDto matchStart(@RequestBody MatchDto matchDto, HttpServletRequest request) {
+    public String matchStart(@RequestBody MatchDto matchDto, HttpServletRequest request) {
 
         // 세션으로부터 uid 받아오기
         Long uid = getUid(request);
@@ -50,7 +71,7 @@ public class MatchControllerImpl implements MatchController{
         // MatchService 대기열 참여
         matchService.join(uid, getScore(uid));
 
-        return null; // 성공처리
+        return "OK"; // 성공처리
     }
 
     /**

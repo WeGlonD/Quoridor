@@ -24,6 +24,9 @@ public class GameRoomManagerV1 implements GameRoomManager {
     public void sendMessageToRoom(Long gameId, WebSocketSession session, MoveMessage message) {
         GameRoom room = gameRepository.findByGameId(gameId);
 
-        room.handleTempActions(session, message);
+        if(room.handleTempActions(session, message)){
+            // true면 게임 종료
+
+        }
     }
 }

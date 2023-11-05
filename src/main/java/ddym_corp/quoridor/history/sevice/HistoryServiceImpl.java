@@ -46,7 +46,7 @@ public class HistoryServiceImpl implements HistoryService{
     @Override
     public List<Histories20ResponseDto> getHistories(Long uid, Long gameId) {
         return historyRepository.find20(uid, gameId).stream()
-                .map(history -> new Histories20ResponseDto(history.getGameId(), history.getWinnerId()==uid, loginService.getName((history.getUid0()==uid)?history.getUid0():history.getUid1()), loginService.getScore((history.getUid0()==uid)?history.getUid0():history.getUid1())))
+                .map(history -> new Histories20ResponseDto(history.getGameId(), history.getWinnerId()==uid, loginService.getName((history.getUid0()!=uid)?history.getUid0():history.getUid1()), loginService.getScore((history.getUid0()!=uid)?history.getUid0():history.getUid1())))
                 .collect(Collectors.toList());
     }
 }

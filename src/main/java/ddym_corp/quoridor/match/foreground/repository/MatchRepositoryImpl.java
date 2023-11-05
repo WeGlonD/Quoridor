@@ -17,7 +17,8 @@ public class MatchRepositoryImpl implements MatchRepository{
     }
     @Override
     public void delete(Long uid){
-        store.remove(uid);
+        MatchedUser matchedUser = findByUid(uid).get();
+        store.remove(matchedUser);
     }
     @Override
     public Optional<MatchedUser> findByUid(Long uid){

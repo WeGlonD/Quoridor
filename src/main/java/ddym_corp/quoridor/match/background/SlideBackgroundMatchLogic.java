@@ -37,13 +37,24 @@ public class SlideBackgroundMatchLogic implements BackgroundMatchLogic{
         store.add(queueUser);
     }
 
+    @Override
+    public void divide(Long uid){
+        for (PreMatchedUser user : store){
+            if (user.getUid() == uid){
+                store.remove(user);
+                return;
+            }
+        }
+    }
+
     private class MyThread extends Thread{
         @Override
         public void run() {
             while (true) {
-                log.info("store size : {}", store.size());
-                while (store.size() > 1) {
-                    logic();
+                synchronized (PreMatchedUser.class) {
+                    while (store.size() > 1) {
+                        logic();
+                    }
                 }
                 try {
                     Thread.sleep(3000);
@@ -92,6 +103,7 @@ public class SlideBackgroundMatchLogic implements BackgroundMatchLogic{
             // push 2 MatchedUser to matchRepository store
             matchRepository.save(new MatchedUser(first.getUid(), 0, history.getGameId()));
             matchRepository.save(new MatchedUser(second.getUid(), 1, history.getGameId()));
+            log.info("{} & {} match", first.getUid(), second.getUid());
             log.info("matchRepository save completed");
         }
     }

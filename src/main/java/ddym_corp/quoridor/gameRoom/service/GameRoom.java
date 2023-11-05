@@ -40,13 +40,15 @@ public class GameRoom {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
 
-    public void handleTempActions(WebSocketSession session, MoveMessage moveMessage) {
+    public Boolean handleTempActions(WebSocketSession session, MoveMessage moveMessage) {
         Long requestUID = (Long)session.getAttributes().get(USER_ID);
-        if (!uIDs[0].equals(requestUID) && !uIDs[1].equals(requestUID))
-            return;
+        if (!uIDs[0].equals(requestUID) && !uIDs[1].equals(requestUID)) {
+            throw new RuntimeException();
+        }
+
         if(moveMessage.getType() == 9) {
             sessions.add(session);
-            return;
+            return false;
         }
 
         log.info("sessions size : {}",sessions.size());
@@ -62,6 +64,7 @@ public class GameRoom {
             String moveStr = moveMessage.getType().toString() + moveMessage.getRow().toString() + moveMessage.getCol().toString();
             log.info("UID {} move {}", uIDs[turn], moveStr);
             historyService.updateMove(gameId, moveStr);
+            turn = (turn + 1) % 2;
 
             if (moveMessage.getType() > 2) {
                 // 게임이 끝났다는 정보가 들어왔을 때.
@@ -85,10 +88,10 @@ public class GameRoom {
                         throw new RuntimeException(e);
                     }
                 });
+                return true;
             }
-
-            turn = (turn + 1) % 2;
         }
+        return false;
     }
 
     /**
