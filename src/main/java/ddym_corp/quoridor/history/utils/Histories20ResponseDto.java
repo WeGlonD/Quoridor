@@ -12,4 +12,5 @@ public class Histories20ResponseDto {
     Boolean win; //True -> win, False -> lose
     String opponentName;
     Integer opponentScore;
+    String opponentProfileImage;
 }
