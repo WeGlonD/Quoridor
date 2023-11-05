@@ -40,7 +40,7 @@ public class LoginServiceImpl {
 
         //이메일도 추가
         Optional<User> byEmail = userRepository.findByEmail(user.getEmail());
-        if(byEmail.isEmpty()) return -3;
+        if(byEmail.isPresent()) return -3;
 
         return 1;
     }

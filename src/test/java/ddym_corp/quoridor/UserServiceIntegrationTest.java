@@ -57,8 +57,10 @@ public class UserServiceIntegrationTest {
 
         //when
         loginService.join(member1);
-        IllegalStateException e = assertThrows(IllegalStateException.class, () -> loginService.join(member2));// 해당 예외가 나오면 run성공, 안나오면 run실패
-        assertThat(e.getMessage()).isEqualTo("이미 존재하는 ID 입니다.");
+        Long uid = loginService.join(member2);
+
+        //IllegalStateException e = assertThrows(IllegalStateException.class, () -> loginService.join(member2));// 해당 예외가 나오면 run성공, 안나오면 run실패
+        assertThat(uid).isEqualTo(-1L);
     }
 
     @Test
