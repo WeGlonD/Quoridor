@@ -11,6 +11,7 @@ import ddym_corp.quoridor.user.User;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -88,7 +89,7 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @GetMapping("/kakao/callback")
-    public User loginKaKao(@RequestParam("code") String code, HttpServletRequest request){
+    public ResponseEntity<User> loginKaKao(@RequestParam("code") String code, HttpServletRequest request){
         KakaoCallbackDto kakaoCallbackDto = new KakaoCallbackDto();
         kakaoCallbackDto.setCode(code);
 
@@ -96,7 +97,7 @@ public class AuthControllerImpl implements AuthController {
         log.info("kakao login? {}", loginUser);
         //로그인 실패처리
         if (loginUser.getUid() == null){
-            throw new UserNotFoundException(String.format("kakao email not found, please signup your email is %s", loginUser.getEmail()));
+            ResponseEntity.badRequest().body(loginUser);
         }
 
         //로그인 성공처리
@@ -107,7 +108,7 @@ public class AuthControllerImpl implements AuthController {
         session.setAttribute(USER_ID, loginUser.getUid());
 
         log.info("session time = {}", session.getMaxInactiveInterval());
-        return loginUser;
+        return ResponseEntity.ok(loginUser);
     }
 
     @PostMapping("/users/help/pw")
