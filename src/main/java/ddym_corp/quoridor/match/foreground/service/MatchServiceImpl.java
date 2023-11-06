@@ -2,8 +2,10 @@ package ddym_corp.quoridor.match.foreground.service;
 
 import ddym_corp.quoridor.gameRoom.repository.GameRoomRepository;
 import ddym_corp.quoridor.gameRoom.service.GameRoom;
-import ddym_corp.quoridor.match.background.BackgroundMatchLogic;
+import ddym_corp.quoridor.match.background.min10.BackgroundMatchLogic10Min;
+import ddym_corp.quoridor.match.background.min3.BackgroundMatchLogic3Min;
 import ddym_corp.quoridor.match.background.PreMatchedUser;
+import ddym_corp.quoridor.match.background.min30.BackgroundMatchLogic30Min;
 import ddym_corp.quoridor.match.foreground.MatchedUser;
 import ddym_corp.quoridor.match.foreground.repository.MatchRepository;
 import ddym_corp.quoridor.match.utils.MatchResponseDto;
@@ -23,7 +25,9 @@ public class MatchServiceImpl implements MatchService{
     private final MatchRepository matchRepository;
     private final GameRoomRepository gameRepository;
     private final UserRepository userRepository;
-    private final BackgroundMatchLogic backgroundMatchLogic;
+    private final BackgroundMatchLogic3Min backgroundMatchLogic3Min;
+    private final BackgroundMatchLogic10Min backgroundMatchLogic10Min;
+    private final BackgroundMatchLogic30Min backgroundMatchLogic30Min;
     @Override
     public MatchResponseDto check(Long uid){
         Optional<MatchedUser> optionalMatchedUser = matchRepository.findByUid(uid);
@@ -47,12 +51,28 @@ public class MatchServiceImpl implements MatchService{
         return new MatchResponseDto(room.getGameId(), me.getTurn(), partner.getName(), partner.getScore());
     }
     @Override
-    public void join(Long uid, Integer score){
-        backgroundMatchLogic.join(new PreMatchedUser(uid, score));
+    public void join(Long uid, Integer score, Integer gameType){
+        if(gameType == 0){
+            backgroundMatchLogic10Min.join(new PreMatchedUser(uid, score));
+        }else if(gameType == 1){
+            backgroundMatchLogic30Min.join(new PreMatchedUser(uid, score));
+        } else if (gameType == 2) {
+            backgroundMatchLogic3Min.join(new PreMatchedUser(uid, score));
+        }else {
+            throw new RuntimeException("invalid gameType");
+        }
     }
     @Override
-    public void exit(Long uid){
-        backgroundMatchLogic.divide(uid);
+    public void exit(Long uid, Integer gameType){
+        if (gameType == 0){
+            backgroundMatchLogic10Min.divide(uid);
+        } else if (gameType == 1) {
+            backgroundMatchLogic10Min.divide(uid);
+        } else if (gameType == 2) {
+            backgroundMatchLogic3Min.divide(uid);
+        }else {
+            throw new RuntimeException("invalid gameType");
+        }
     }
 
 }

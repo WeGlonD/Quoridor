@@ -1,7 +1,9 @@
 package ddym_corp.quoridor;
 
 import ddym_corp.quoridor.history.repository.HistoryRepository;
-import ddym_corp.quoridor.match.background.BackgroundMatchLogic;
+import ddym_corp.quoridor.match.background.min10.BackgroundMatchLogic10Min;
+import ddym_corp.quoridor.match.background.min3.BackgroundMatchLogic3Min;
+import ddym_corp.quoridor.match.background.min30.BackgroundMatchLogic30Min;
 import ddym_corp.quoridor.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -19,13 +21,21 @@ public class QuoridorApplication {
 	}
 
 	@Autowired
-	private BackgroundMatchLogic backgroundMatchLogic;
-	public static void threadStart(BackgroundMatchLogic backgroundMatchLogic) throws InterruptedException {
-		backgroundMatchLogic.run();
+	private BackgroundMatchLogic3Min backgroundMatchLogic3Min;
+	@Autowired
+	private BackgroundMatchLogic10Min backgroundMatchLogic10Min;
+	@Autowired
+	private BackgroundMatchLogic30Min backgroundMatchLogic30Min;
+	public static void threadStart(BackgroundMatchLogic3Min backgroundMatchLogic3Min,
+								   BackgroundMatchLogic10Min backgroundMatchLogic10Min,
+								   BackgroundMatchLogic30Min backgroundMatchLogic30Min) throws InterruptedException {
+		backgroundMatchLogic3Min.run();
+		backgroundMatchLogic10Min.run();
+		backgroundMatchLogic30Min.run();
 	}
 	@Bean
 	public CommandLineRunner commandLineRunner(){
-		return args -> threadStart(backgroundMatchLogic);
+		return args -> threadStart(backgroundMatchLogic3Min, backgroundMatchLogic10Min, backgroundMatchLogic30Min);
 	}
 
 	@Bean

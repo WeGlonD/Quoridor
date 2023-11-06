@@ -1,9 +1,11 @@
-package ddym_corp.quoridor.match.background;
+package ddym_corp.quoridor.match.background.min3;
 
 import ddym_corp.quoridor.gameRoom.service.GameRoom;
 import ddym_corp.quoridor.gameRoom.service.GameRoomManager;
 import ddym_corp.quoridor.history.History;
 import ddym_corp.quoridor.history.sevice.HistoryService;
+import ddym_corp.quoridor.match.background.PreMatchedUser;
+import ddym_corp.quoridor.match.background.min3.BackgroundMatchLogic3Min;
 import ddym_corp.quoridor.match.foreground.MatchedUser;
 import ddym_corp.quoridor.match.foreground.repository.MatchRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +20,7 @@ import java.util.List;
 @Slf4j
 @Component
 @RequiredArgsConstructor
-public class SlideBackgroundMatchLogic implements BackgroundMatchLogic{
+public class SlideBackgroundMatchLogic3Min implements BackgroundMatchLogic3Min {
 
     private final GameRoomManager roomManager;
     private final HistoryService historyService;

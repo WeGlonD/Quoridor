@@ -7,7 +7,7 @@ import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
-import jdk.jshell.execution.Util;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -40,7 +40,7 @@ public class MatchControllerImpl implements MatchController{
      * @return MatchResponseDto or null
      */
     @DeleteMapping("/matched_users")
-    public MatchResponseDto escape(HttpServletRequest request){
+    public MatchResponseDto escape(@Valid @RequestBody Integer gameType, HttpServletRequest request){
 
         // 세션으로부터 uid 받아오기
         Long uid = getUid(request);
@@ -49,7 +49,7 @@ public class MatchControllerImpl implements MatchController{
         synchronized (PreMatchedUser.class) {
             MatchResponseDto dto = matchService.check(uid);
             if (dto == null) {
-                matchService.exit(uid);
+                matchService.exit(uid, gameType);
                 return null;
             }
             return dto;
@@ -66,10 +66,9 @@ public class MatchControllerImpl implements MatchController{
 
         // gameType 부분 수정해야함
         int gameType = matchDto.getGameType();
-        // 수정 필요!!!!!
 
         // MatchService 대기열 참여
-        matchService.join(uid, getScore(uid));
+        matchService.join(uid, getScore(uid), gameType);
 
         return "OK"; // 성공처리
     }

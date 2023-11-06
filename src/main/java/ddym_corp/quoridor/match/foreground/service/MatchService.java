@@ -4,7 +4,7 @@ import ddym_corp.quoridor.match.utils.MatchResponseDto;
 
 public interface MatchService {
     MatchResponseDto check(Long uid);
-    void join(Long uid, Integer score);
+    void join(Long uid, Integer score, Integer gameType);
 
-    void exit(Long uid);
+    void exit(Long uid, Integer gameType);
 }
