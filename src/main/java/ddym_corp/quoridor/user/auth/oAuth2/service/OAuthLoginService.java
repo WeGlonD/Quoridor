@@ -40,6 +40,7 @@ public class OAuthLoginService {
     public User login(OAuthCallbackParams params) {
         OAuthInfoResponse oAuthInfoResponse = request(params);
         String email = oAuthInfoResponse.getEmail();
+        log.info("kakao email: {}", email);
         Optional<User> optionalUser = userRepository.findByEmail(email);
         if(optionalUser.isEmpty()){
             return new User(email);
