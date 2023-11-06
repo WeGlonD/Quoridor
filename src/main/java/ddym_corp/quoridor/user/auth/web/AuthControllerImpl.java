@@ -88,7 +88,7 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @GetMapping("/kakao/callback")
-    public User loginKaKao(@RequestParam("code") String code, HttpServletRequest request, HttpServletResponse response){
+    public User loginKaKao(@RequestParam("code") String code, HttpServletRequest request){
         KakaoCallbackDto kakaoCallbackDto = new KakaoCallbackDto();
         kakaoCallbackDto.setCode(code);
 
@@ -96,9 +96,7 @@ public class AuthControllerImpl implements AuthController {
         log.info("kakao login? {}", loginUser);
         //로그인 실패처리
         if (loginUser.getUid() == null){
-            //throw new UserNotFoundException(String.format("kakao email not found, please signup your email is %s", loginUser.getEmail()));
-            response.setStatus(404);
-            response.setHeader("email", loginUser.getEmail());
+            throw new UserNotFoundException(String.format("kakao email not found, please signup your email is %s", loginUser.getEmail()));
         }
 
         //로그인 성공처리
