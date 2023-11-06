@@ -7,7 +7,7 @@ public class Elo {
     private static final double diff = 400.0;
     private static final double K = 20.0;
 
-    public static final int INIT_SCORE = 0;
+    public static final int INIT_SCORE = 800;
 
     public static double calcW(int myRating, int opponentRating) {
         return 1/(Math.pow(ratio, (opponentRating - myRating) / diff) + 1);
