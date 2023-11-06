@@ -28,8 +28,8 @@ class MatchServiceTest {
         user1.setScore(500);
         userRepository.update(user1);
 
-        matchService.join(user0.getUid(),400);
-        matchService.join(user1.getUid(),500);
+        matchService.join(user0.getUid(),400,0);
+        matchService.join(user1.getUid(),500,0);
 
         Thread.sleep(5000);
         //when
