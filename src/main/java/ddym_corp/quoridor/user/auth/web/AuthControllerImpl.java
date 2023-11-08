@@ -12,11 +12,16 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.session.SessionInformation;
+import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+
+import java.util.List;
+import java.util.Map;
 
 import static ddym_corp.quoridor.user.auth.web.uitls.SessionConst.*;
 
@@ -27,26 +32,30 @@ public class AuthControllerImpl implements AuthController {
 
     private final LoginServiceImpl loginService;
     private final OAuthLoginService oAuthLoginService;
+    private final SessionRegistry sessionRegistry;
     @PostMapping("/users/login")
     public User login(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
 
         User loginUser = loginService.login(loginDto.getLoginId(), loginDto.getPassword());
         log.info("login? {}",loginUser);
-
         //로그인 실패처리
         if (loginUser == null){
-            response.setStatus(459);
-            return null;
+            throw new UserNotFoundException("login user not found");
         }
-
         //로그인 성공처리
-        HttpSession session = request.getSession();
-        log.info("login id: {} session id: {}", loginUser.getLoginId(), session.getId());
-        //세션 유지시간 1800초
-        session.setMaxInactiveInterval(1800);
-        session.setAttribute(USER_ID, loginUser.getUid());
-
-        log.info("session time = {}", session.getMaxInactiveInterval());
+        List<SessionInformation> allSessions = sessionRegistry.getAllSessions(loginUser.getUid(), false);
+        log.info("allSessions size: {}",allSessions.size());
+        if(allSessions.size() > 0){
+            log.info("login fail: duplicated user");
+            response.setStatus(463);
+        }else{
+            HttpSession session = request.getSession();
+            log.info("login id: {} session id: {}", loginUser.getLoginId(), session.getId());
+            //세션 유지시간 1800초
+            session.setMaxInactiveInterval(1800);
+            session.setAttribute(USER_ID, loginUser.getUid());
+            log.info("session time = {}", session.getMaxInactiveInterval());
+        }
         return loginUser;
     }
 
@@ -113,7 +122,8 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @PostMapping("/users/help/pw")
-    public String helpPassword(@Valid @RequestBody String loginId){
+    public String helpPassword(@RequestBody Map<String, String> param){
+        String loginId = param.get("loginId");
         try {
             String newPassword = loginService.resetPassWord(loginId);
             return newPassword;
