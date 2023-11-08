@@ -85,6 +85,7 @@ public class GameRoom {
                     winnerUID = uIDs[turn];
                     loserUID = uIDs[(turn + 1) % 2];
                 }
+                historyService.updateWinner(gameId, winnerUID);
                 calcDeltaScore(winnerUID, loserUID, false);
                 sessions.forEach(session1 -> {
                     try {

@@ -40,6 +40,7 @@ class HistoryServiceImplTest {
         for (int gameId = 0; gameId<10; gameId++){
             History history = new History((long) gameId, user1.getUid(), user0.getUid(), 10, 10, new Timestamp(System.currentTimeMillis()));
             historyService.makeHistory(history);
+            historyService.updateWinner((long) gameId,user1.getUid());
         }
         for (int gameId = 10; gameId<25; gameId++){
             History history = new History((long) gameId, user0.getUid(), user1.getUid(), 10, 10, new Timestamp(System.currentTimeMillis()));
@@ -48,11 +49,12 @@ class HistoryServiceImplTest {
 
 
         //when
-        List<Histories20ResponseDto> histories = historyService.getHistories(user0.getUid(), 21L);
+        List<Histories20ResponseDto> histories = historyService.getHistories(user1.getUid(), 21L);
         //then
         log.info("histories : {}",histories);
         Assertions.assertThat(histories.get(0).getGameId()).isEqualTo(20L);
         Assertions.assertThat(histories.get(19).getGameId()).isEqualTo(1L);
+        Assertions.assertThat(histories.get(19).getWin()).isEqualTo(true);
     }
 
 }
