@@ -38,6 +38,7 @@ public class GameRoom {
 
     private Long gameId;
     private final ObjectMapper objectMapper = new ObjectMapper();
+    public boolean isOver = false;
 
 
     public Boolean handleTempActions(WebSocketSession session, MoveMessage moveMessage) {
@@ -58,6 +59,7 @@ public class GameRoom {
 
         // 탈주자 처리
         if (moveMessage.getType() == 4) {
+            isOver = true;
             log.info("User escaped: {}", requestUID);
             String moveStr = moveMessage.getType().toString() + moveMessage.getRow().toString() + moveMessage.getCol().toString();
             historyService.updateMove(gameId, moveStr);
@@ -90,6 +92,7 @@ public class GameRoom {
 
             if (moveMessage.getType() > 2) {
                 // 게임이 끝났다는 정보가 들어왔을 때.
+                isOver = true;
                 Long winnerUID = null, loserUID = null;
                 if (moveMessage.getType() == 3) {
                     // 이긴 수 : 상대방 진영까지 말을 움직이는 수가 들어옴. // 이미 턴이 증가된 상태
