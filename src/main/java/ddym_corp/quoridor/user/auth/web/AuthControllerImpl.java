@@ -43,16 +43,17 @@ public class AuthControllerImpl implements AuthController {
         }
         //로그인 성공처리
         List<SessionInformation> allSessions = sessionRegistry.getAllSessions(loginUser.getUid(), false);
+        log.info("allSessions size: {}",allSessions.size());
         if(allSessions.size() > 0){
+            log.info("login fail: duplicated user");
+            response.setStatus(463);
+        }else{
             HttpSession session = request.getSession();
             log.info("login id: {} session id: {}", loginUser.getLoginId(), session.getId());
             //세션 유지시간 1800초
             session.setMaxInactiveInterval(1800);
             session.setAttribute(USER_ID, loginUser.getUid());
             log.info("session time = {}", session.getMaxInactiveInterval());
-        }else{
-            log.info("login fail: duplicated user");
-            response.setStatus(463);
         }
         return loginUser;
     }
