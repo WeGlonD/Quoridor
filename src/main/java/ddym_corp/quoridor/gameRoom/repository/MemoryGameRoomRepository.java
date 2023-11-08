@@ -47,6 +47,18 @@ public class MemoryGameRoomRepository implements GameRoomRepository {
     }
 
     /**
+     * gameId로 방 삭제
+     * @param gameId
+     * @return 방 지웠으면 true, 방이 원래 없었으면 false
+     */
+    @Override
+    public boolean remove(Long gameId) {
+        GameRoom removed = gameRooms.remove(gameId);
+        if (removed != null) return true;
+        else return false;
+    }
+
+    /**
      * 방 저장
      * @param
      * @return

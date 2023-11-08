@@ -1,5 +1,6 @@
 package ddym_corp.quoridor.ranking.domain.service;
 
+import ddym_corp.quoridor.gameRoom.service.scoreLogic.Elo;
 import ddym_corp.quoridor.ranking.RankingUser;
 import ddym_corp.quoridor.user.repository.UserRepository;
 import jakarta.annotation.PostConstruct;
@@ -29,8 +30,8 @@ public class RedisRankingService implements RankingService {
     @Override
     @Transactional
     public RankingUser join(Long uid) {
-        RankingUser rankingUser = new RankingUser(0,uid, null);
-        redisTemplate.opsForZSet().add(key, uid, 0);
+        RankingUser rankingUser = new RankingUser(Elo.INIT_SCORE,uid, null);
+        redisTemplate.opsForZSet().add(key, uid, Elo.INIT_SCORE);
         return rankingUser;
     }
 

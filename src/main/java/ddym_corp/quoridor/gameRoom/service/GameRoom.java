@@ -56,6 +56,25 @@ public class GameRoom {
 
         log.info("sessions size : {}",sessions.size());
 
+        // 탈주자 처리
+        if (moveMessage.getType() == 4) {
+            log.info("User escaped: {}", requestUID);
+            String moveStr = moveMessage.getType().toString() + moveMessage.getRow().toString() + moveMessage.getCol().toString();
+            historyService.updateMove(gameId, moveStr);
+            Long opponentId = uIDs[0];
+            if (opponentId.equals(requestUID)) opponentId = uIDs[1];
+            calcDeltaScore(opponentId, requestUID, true);
+            sessions.forEach(session1 -> {
+                try {
+                    if (session1.isOpen()) session1.close();
+                } catch (IOException e) {
+                    log.error("Cannot close WebSocketSession");
+                    throw new RuntimeException(e);
+                }
+            });
+            return true;
+        }
+
         // 필요한 처리 ( ■ : 테스트 완료 / □ : 구현완료 / X : 미완성 )
         // ■ 자기 차례에 맞게 요청이 들어왔는지 확인하고 메시지 보내기
         // ■ 메시지 보내면 턴 넘기기
@@ -63,9 +82,6 @@ public class GameRoom {
         // □ 수가 들어올 때마다 History를 DB에 저장.
         // □ 이 게임에 배정되지 않은 유저가 호출한 경우 처리.
         if (getTurn(session) == turn) {
-            if (!sessionCheck(session)) {
-                return true;
-            }
             sendMoveMessage(moveMessage, session);
             String moveStr = moveMessage.getType().toString() + moveMessage.getRow().toString() + moveMessage.getCol().toString();
             log.info("UID {} move {}", uIDs[turn], moveStr);
@@ -107,7 +123,7 @@ public class GameRoom {
         }
         if(!ret) {
             Long winnerUID = (Long) session.getAttributes().get(USER_ID);
-            Long loserUID = uIDs[(turn + 1)%2];
+            Long loserUID = uIDs[(turn + 1) % 2];
             calcDeltaScore(winnerUID,loserUID,true);
             try {
                 session.close();
