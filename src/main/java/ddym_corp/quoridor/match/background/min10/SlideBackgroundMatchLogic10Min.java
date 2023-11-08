@@ -52,10 +52,8 @@ public class SlideBackgroundMatchLogic10Min implements BackgroundMatchLogic10Min
         @Override
         public void run() {
             while (true) {
-                synchronized (PreMatchedUser.class) {
-                    while (store.size() > 1) {
-                        logic();
-                    }
+                while (store.size() > 1) {
+                    logic();
                 }
                 try {
                     Thread.sleep(3000);

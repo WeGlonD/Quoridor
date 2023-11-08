@@ -46,14 +46,12 @@ public class MatchControllerImpl implements MatchController{
         // 세션으로부터 uid 받아오기
         Long uid = getUid(request);
         // 성공하면 matchResponseDto 실패하면 null 반환
-        synchronized (PreMatchedUser.class) {
-            MatchResponseDto dto = matchService.check(uid);
-            if (dto == null) {
-                matchService.exit(uid, gameType);
-                return null;
-            }
-            return dto;
+        MatchResponseDto dto = matchService.check(uid);
+        if (dto == null) {
+            matchService.exit(uid, gameType);
+            return null;
         }
+        return dto;
     }
     @Override
     @PostMapping("/matched_users")
