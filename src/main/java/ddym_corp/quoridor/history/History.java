@@ -1,5 +1,6 @@
 package ddym_corp.quoridor.history;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -27,6 +28,9 @@ public class History {
     private String moves;
     // 누가 이겼는 지
     private Long winnerId;
+
+    private IdScore idScore0;
+    private IdScore idScore1;
     public History(Long gameId, Long uid0, Long uid1, Integer score0, Integer score1, Timestamp stamp) {
         this.gameId = gameId;
         this.uid0 = uid0;
@@ -35,5 +39,14 @@ public class History {
         this.score1 = score1;
         this.stamp = stamp;
         this.moves = "";
+        this.idScore0 = new IdScore(uid0, score0);
+        this.idScore1 = new IdScore(uid1, score1);
+    }
+
+    @AllArgsConstructor
+    @Getter @Setter
+    public class IdScore{
+        private Long uid;
+        private Integer score;
     }
 }

@@ -21,6 +21,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 
 import java.util.List;
+import java.util.Map;
 
 import static ddym_corp.quoridor.user.auth.web.uitls.SessionConst.*;
 
@@ -121,7 +122,8 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @PostMapping("/users/help/pw")
-    public String helpPassword(@Valid @RequestBody String loginId){
+    public String helpPassword(@RequestBody Map<String, String> param){
+        String loginId = param.get("loginId");
         try {
             String newPassword = loginService.resetPassWord(loginId);
             return newPassword;

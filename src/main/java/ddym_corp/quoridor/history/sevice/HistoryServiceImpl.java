@@ -51,14 +51,14 @@ public class HistoryServiceImpl implements HistoryService{
                 .map(history -> new Histories20ResponseDto(
                         history.getGameId(),
                         history.getWinnerId()==uid,
-                        loginService.getName(getOpponentUid(uid, history)),
-                        loginService.getScore(getOpponentUid(uid, history)),
-                        profileImageService.get(getOpponentUid(uid, history))
+                        loginService.getName(getOpponentIdScore(uid, history).getUid()),
+                        getOpponentIdScore(uid, history).getScore(),
+                        profileImageService.get(getOpponentIdScore(uid, history).getUid())
                 ))
                 .collect(Collectors.toList());
     }
 
-    private static Long getOpponentUid(Long uid, History history) {
-        return (history.getUid0() != uid) ? history.getUid0() : history.getUid1();
+    private static History.IdScore getOpponentIdScore(Long uid, History history) {
+        return (history.getIdScore0().getUid() != uid) ? history.getIdScore0() : history.getIdScore1();
     }
 }
