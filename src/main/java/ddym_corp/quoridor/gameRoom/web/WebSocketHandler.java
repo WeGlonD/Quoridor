@@ -7,6 +7,7 @@ import ddym_corp.quoridor.gameRoom.service.GameRoomManager;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.web.socket.CloseStatus;
 import org.springframework.web.socket.TextMessage;
 import org.springframework.web.socket.WebSocketSession;
 import org.springframework.web.socket.handler.TextWebSocketHandler;
@@ -17,6 +18,15 @@ import org.springframework.web.socket.handler.TextWebSocketHandler;
 public class WebSocketHandler extends TextWebSocketHandler {
     private final ObjectMapper objectMapper;
     private final GameRoomManager roomManager;
+
+    @Override
+    public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
+        super.afterConnectionClosed(session, status);
+        log.info("WebSocketHandler - afterConnectionClosed");
+        log.info("Disconnected session - gameId: {}, uid: {}", getGameId(session), (Long) session.getAttributes().get(SessionConst.USER_ID));
+        roomManager.sendMessageToRoom(getGameId(session), session, new MoveMessage(4, 0L, 0, 0));
+    }
+
     @Override
     protected void handleTextMessage(WebSocketSession session, TextMessage message) {
 

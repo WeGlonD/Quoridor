@@ -21,12 +21,17 @@ public class GameRoomManagerV1 implements GameRoomManager {
     }
 
     @Override
+    public GameRoom findRoom(Long gameId) {
+        return gameRepository.findByGameId(gameId);
+    }
+
+    @Override
     public void sendMessageToRoom(Long gameId, WebSocketSession session, MoveMessage message) {
         GameRoom room = gameRepository.findByGameId(gameId);
 
         if(room.handleTempActions(session, message)){
             // true면 게임 종료
-
+            gameRepository.remove(gameId);
         }
     }
 }
