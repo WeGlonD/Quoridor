@@ -32,7 +32,7 @@ public class AuthControllerImpl implements AuthController {
 
     private final LoginServiceImpl loginService;
     private final OAuthLoginService oAuthLoginService;
-    private final SessionRegistry sessionRegistry;
+//    private final SessionRegistry sessionRegistry;
     @PostMapping("/users/login")
     public User login(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
 
@@ -43,19 +43,26 @@ public class AuthControllerImpl implements AuthController {
             throw new UserNotFoundException("login user not found");
         }
         //로그인 성공처리
-        List<SessionInformation> allSessions = sessionRegistry.getAllSessions(loginUser.getUid(), false);
-        log.info("allSessions size: {}",allSessions.size());
-        if(allSessions.size() > 0){
-            log.info("login fail: duplicated user");
-            response.setStatus(463);
-        }else{
-            HttpSession session = request.getSession();
-            log.info("login id: {} session id: {}", loginUser.getLoginId(), session.getId());
-            //세션 유지시간 1800초
-            session.setMaxInactiveInterval(1800);
-            session.setAttribute(USER_ID, loginUser.getUid());
-            log.info("session time = {}", session.getMaxInactiveInterval());
-        }
+//        List<SessionInformation> allSessions = sessionRegistry.getAllSessions(loginUser.getUid(), false);
+//        log.info("allSessions size: {}",allSessions.size());
+//        if(allSessions.size() > 0){
+//            log.info("login fail: duplicated user");
+//            response.setStatus(463);
+//        }else{
+//            HttpSession session = request.getSession();
+//            log.info("login id: {} session id: {}", loginUser.getLoginId(), session.getId());
+//            //세션 유지시간 1800초
+//            session.setMaxInactiveInterval(1800);
+//            session.setAttribute(USER_ID, loginUser.getUid());
+//            log.info("session time = {}", session.getMaxInactiveInterval());
+//        }
+
+        HttpSession session = request.getSession();
+        log.info("login id: {} session id: {}", loginUser.getLoginId(), session.getId());
+        //세션 유지시간 1800초
+        session.setMaxInactiveInterval(1800);
+        session.setAttribute(USER_ID, loginUser.getUid());
+        log.info("session time = {}", session.getMaxInactiveInterval());
         return loginUser;
     }
 
