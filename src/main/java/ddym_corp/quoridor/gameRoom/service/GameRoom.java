@@ -65,6 +65,7 @@ public class GameRoom {
             historyService.updateMove(gameId, moveStr);
             Long opponentId = uIDs[0];
             if (opponentId.equals(requestUID)) opponentId = uIDs[1];
+            historyService.updateWinner(gameId, opponentId);
             calcDeltaScore(opponentId, requestUID, true);
             sessions.forEach(session1 -> {
                 try {
