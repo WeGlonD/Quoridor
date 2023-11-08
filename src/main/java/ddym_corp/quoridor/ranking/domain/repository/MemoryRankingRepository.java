@@ -89,15 +89,15 @@ public class MemoryRankingRepository implements RankingRepository {
         return rankingBST.tailSet(currUser, inclusive).stream().toList().subList(0, downLimit);
     }
 
-    @PostConstruct
-    void init() {
-        RankingUser jaemo = new RankingUser(0, 1L, null);
-        RankingUser dw = new RankingUser(0, 2L, null);
-
-        rankingBST.add(jaemo);
-        rankingBST.add(dw);
-
-        rankingHash.put(jaemo.getUid(), jaemo);
-        rankingHash.put(dw.getUid(), dw);
-    }
+//    @PostConstruct
+//    void init() {
+//        RankingUser jaemo = new RankingUser(0, 1L, null);
+//        RankingUser dw = new RankingUser(0, 2L, null);
+//
+//        rankingBST.add(jaemo);
+//        rankingBST.add(dw);
+//
+//        rankingHash.put(jaemo.getUid(), jaemo);
+//        rankingHash.put(dw.getUid(), dw);
+//    }
 }
