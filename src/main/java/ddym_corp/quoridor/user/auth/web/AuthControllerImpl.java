@@ -1,6 +1,7 @@
 package ddym_corp.quoridor.user.auth.web;
 
 import ddym_corp.quoridor.user.auth.login.LoginServiceImpl;
+import ddym_corp.quoridor.user.auth.web.dto.HelpDto;
 import ddym_corp.quoridor.user.auth.web.dto.LoginDto;
 import ddym_corp.quoridor.user.auth.web.dto.SignupDto;
 import ddym_corp.quoridor.user.auth.web.dto.UserUpdateDto;
@@ -129,11 +130,11 @@ public class AuthControllerImpl implements AuthController {
     }
 
     @PostMapping("/users/help/pw")
-    public String helpPassword(@RequestBody Map<String, String> param){
+    public HelpDto helpPassword(@RequestBody Map<String, String> param){
         String loginId = param.get("loginId");
         try {
             String newPassword = loginService.resetPassWord(loginId);
-            return newPassword;
+            return new HelpDto(newPassword);
         }catch (RuntimeException e){
             log.error("helpPassword",e);
             throw new UserNotFoundException("LoginId is not valid, plz check again");
