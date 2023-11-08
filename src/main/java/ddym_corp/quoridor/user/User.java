@@ -2,8 +2,6 @@ package ddym_corp.quoridor.user;
 
 import lombok.*;
 
-//import javax.persistence.*;
-
 @Getter @Setter
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,6 +17,7 @@ public class User {
     private Integer score;
     private Integer totalGames;
     private Integer winGames;
+
     public User(String id, String pw) {
         this.loginId = id;
         this.password = pw;
