@@ -28,14 +28,15 @@ public class AuthControllerImpl implements AuthController {
     private final LoginServiceImpl loginService;
     private final OAuthLoginService oAuthLoginService;
     @PostMapping("/users/login")
-    public User login(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request) {
+    public User login(@Valid @RequestBody LoginDto loginDto, HttpServletRequest request, HttpServletResponse response) {
 
         User loginUser = loginService.login(loginDto.getLoginId(), loginDto.getPassword());
         log.info("login? {}",loginUser);
 
         //로그인 실패처리
         if (loginUser == null){
-            // 400 예외처리
+            response.setStatus(459);
+            return null;
         }
 
         //로그인 성공처리
