@@ -41,6 +41,8 @@ public class MatchControllerImpl implements MatchController{
      */
     @DeleteMapping("/matched_users")
     public MatchResponseDto escape(@RequestParam("gameType") Integer gameType, HttpServletRequest request){
+
+        log.info("gameType: {}", gameType);
         // 세션으로부터 uid 받아오기
         Long uid = getUid(request);
         // 성공하면 matchResponseDto 실패하면 null 반환
