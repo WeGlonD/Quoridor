@@ -15,4 +15,5 @@ public interface HistoryRepository {
     public History update(History history);
     History findByGameId(Long gameId);
     ArrayList<History> find20(Long uid, Long gameId);
+    void clearAll();
 }

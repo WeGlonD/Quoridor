@@ -1,11 +1,13 @@
 package ddym_corp.quoridor.history.sevice;
 
 import ddym_corp.quoridor.history.History;
+import ddym_corp.quoridor.history.repository.HistoryRepository;
 import ddym_corp.quoridor.history.utils.Histories20ResponseDto;
 import ddym_corp.quoridor.user.User;
 import ddym_corp.quoridor.user.repository.UserRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,12 +20,19 @@ import java.util.List;
 class HistoryServiceImplTest {
 
     private final HistoryService historyService;
+    private final HistoryRepository historyRepository;
     private final UserRepository userRepository;
 
     @Autowired
-    public HistoryServiceImplTest(HistoryService historyService, UserRepository userRepository) {
+    public HistoryServiceImplTest(HistoryService historyService, HistoryRepository historyRepository, UserRepository userRepository) {
         this.historyService = historyService;
+        this.historyRepository = historyRepository;
         this.userRepository = userRepository;
+    }
+
+    @AfterEach
+    void clear() {
+        historyRepository.clearAll();
     }
 
     @Test

@@ -37,6 +37,9 @@ public class MemoryHistoryRepository implements HistoryRepository{
     }
 
     @Override
+    public void clearAll() { store.clear(); }
+
+    @Override
     public ArrayList<History> find20(Long uid, Long gameId) {
         ArrayList<History> histories = findAll();
         return (ArrayList<History>) histories.stream()
