@@ -23,8 +23,14 @@ public class WebSocketHandler extends TextWebSocketHandler {
     public void afterConnectionClosed(WebSocketSession session, CloseStatus status) throws Exception {
         super.afterConnectionClosed(session, status);
         log.info("WebSocketHandler - afterConnectionClosed");
-        log.info("Disconnected session - gameId: {}, uid: {}", getGameId(session), (Long) session.getAttributes().get(SessionConst.USER_ID));
-        roomManager.sendMessageToRoom(getGameId(session), session, new MoveMessage(4, 0L, 0, 0));
+        Long gameId = getGameId(session);
+        Long uID = (Long) session.getAttributes().get(SessionConst.USER_ID);
+        log.info("Disconnected session - gameId: {}, uid: {}", gameId, uID);
+        if (!roomManager.findRoom(gameId).isOver) {
+            //게임 진행중 탈주
+            log.info("AFK!! gameId: {}, uid: {}", gameId, uID);
+            roomManager.sendMessageToRoom(gameId, session, new MoveMessage(4, 0L, 0, 0));
+        }
     }
 
     @Override
